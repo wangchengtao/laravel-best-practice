@@ -1,7 +1,7 @@
 {
-    "name": "wangchengtao/demo",
+    "name": "wangchengtao/laravel-best-practice",
     "type": "project",
-    "description": "基于 laravel 10 开发的初始化项目.",
+    "description": "laravel 项目开发实战 demo",
     "keywords": [
         "framework",
         "laravel"
