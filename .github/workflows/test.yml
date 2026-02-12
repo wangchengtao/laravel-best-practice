@@ -74,13 +74,11 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DB_CONNECTION: mysql
-        DB_HOST: mysql
         DB_PORT: 3306
         DB_DATABASE: blog
         DB_USERNAME: root
         DB_PASSWORD: password
 
-        REDIS_HOST: redis
         REDIS_PORT: 6379
 
         CACHE_DRIVER: redis
