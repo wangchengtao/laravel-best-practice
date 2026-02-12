@@ -77,17 +77,15 @@ jobs:
     - name: Clear configs
       run: php artisan config:clear
 
-    - name: Wait for Mysql to be ready
-      run: |
-        until mysqladmin ping -h mysql --silent; do
-          echo "Waiting for mysql to be ready..."
-          sleep 5
-        done
-
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DB_CONNECTION: mysql
         DB_HOST: mysql
+        DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+        DB_DATABASE: blog
+        DB_USERNAME: root
+        DB_PASSWORD: password
 
         REDIS_HOST: redis
+        REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
       run: php artisan test
