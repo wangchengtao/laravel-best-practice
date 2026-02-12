@@ -22,3 +22,5 @@ _ide_helper_models.php
 /.scribe
 resources/views/scribe
 public/vendor
+
+composer.lock
