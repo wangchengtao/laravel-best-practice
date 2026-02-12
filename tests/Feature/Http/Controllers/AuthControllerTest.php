@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Constants\BizCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -25,19 +25,19 @@ class AuthControllerTest extends TestCase
         $this->postJson(route('auth.login'), [
             'name' => 'test',
             'password' => 'password',
-        ])->assertJsonPath('code', '000000');
+        ])->assertJsonPath('code', BizCode::SUCCESS->value);
 
         // 用户名错误
         $this->postJson(route('auth.login'), [
             'name' => 'test1',
             'password' => 'password',
-        ])->assertJsonPath('code', '300000');
+        ])->assertJsonPath('code', BizCode::FAIL->value);
 
         // 密码错误
         $this->postJson(route('auth.login'), [
             'name' => 'test',
             'password' => 'password1',
-        ])->assertJsonPath('code', '300000');
+        ])->assertJsonPath('code', BizCode::FAIL->value);
     }
 
     public function testMe()
@@ -65,7 +65,7 @@ class AuthControllerTest extends TestCase
 
         $this->withHeader('Authorization', 'Bearer '. auth()->login($user))
              ->delete(route('auth.logout'))
-             ->assertJsonPath('code', '000000');
+             ->assertJsonPath('code', BizCode::SUCCESS->value);
     }
 
     public function testModifyPassword()
@@ -84,11 +84,11 @@ class AuthControllerTest extends TestCase
                  'old_password' => 'admin',
                  'password' => 'password',
              ])
-            ->assertJsonPath('code', '000000');
+            ->assertJsonPath('code', BizCode::SUCCESS->value);
 
         $this->postJson(route('auth.login'), [
             'name' => 'test',
             'password' => 'password',
-        ])->assertJsonPath('code', '000000');
+        ])->assertJsonPath('code', BizCode::SUCCESS->value);
     }
 }

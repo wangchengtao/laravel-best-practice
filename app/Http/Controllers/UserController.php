@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $users = User::filter($request->all())->paginate(10);
 
-        return $this->paginate(new UserCollection($users));
+        return $this->collection(new UserCollection($users));
     }
 
     #[Endpoint('创建')]

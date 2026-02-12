@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\APIResultData;
-use App\Data\PaginationResultData;
+use App\Constants\BizCode;
+use App\Supports\ApiResult;
+use App\Supports\PageResult;
+use App\Supports\PaginateModel;
+use App\Supports\Result;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,34 +19,32 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function paginate(mixed $list, int $count = 0, int $page = 1, int $size = 15): JsonResponse
+    protected function paginate(LengthAwarePaginator $paginator): JsonResponse
     {
-        if ($list instanceof ResourceCollection) {
-            $count = $list->count();
-            $page = $list->resource->currentPage();
-            $size = $list->resource->perPage();
-        }
+        $model = PaginateModel::fromPaginator($paginator);
 
-        return $this->success(new PaginationResultData($page, $size, $count, $list));
+        return $this->response(new PageResult($model));
     }
 
-    protected function success(mixed $data = null, $message = '请求成功'): JsonResponse
+    protected function collection(ResourceCollection $collection): JsonResponse
     {
-        $data = new APIResultData(SUCCESS, $message, $data);
+        $model = PaginateModel::fromCollection($collection);
 
-        return response()->json($data)->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-        // return response()->json([
-        //     'code' => SUCCESS,
-        //     'message' => $message,
-        //     'data' => $data,
-        // ])->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return $this->response(new PageResult($model));
     }
 
-    protected function error($message = '请求失败', $code = FAILED, $data = [])
+    protected function success(mixed $data = null): JsonResponse
     {
-        $result = compact('message', 'code', 'data');
+        return $this->response(ApiResult::success($data));
+    }
 
-        return response()->json($result)->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    protected function error(string $message = '请求失败', BizCode $code = BizCode::FAIL): JsonResponse
+    {
+        return $this->response(new Result($code->value, $message));
+    }
+
+    protected function response(Result $result): JsonResponse
+    {
+        return response()->json($result)->setEncodingOptions(320);
     }
 }

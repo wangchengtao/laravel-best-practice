@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\PaginationResultData;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
@@ -22,7 +21,7 @@ class CategoryController extends Controller
     {
         $categories = Category::paginate(10);
 
-        return $this->paginate(CategoryResource::collection($categories));
+        return $this->collection(CategoryResource::collection($categories));
     }
 
     #[Endpoint('创建')]

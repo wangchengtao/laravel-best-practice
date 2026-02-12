@@ -1,5 +1,5 @@
 ## 概述
-博客网站 demo，基于 Laravel 10.
+laravel 项目开发实战
 
 ## 测试
 `php artisan test`
@@ -7,7 +7,7 @@
 ## 接口文档
 `php artisan scribe:generate`
 
-![文档示例](docs.png)
+![文档示例](public/docs.png)
 
 ## 依赖列表
 | **名称**                     | **版本** | **描述**        | **链接**                                                    |

@@ -26,7 +26,7 @@ class AuthController extends Controller
 
     #[Endpoint('登录')]
     #[Response([
-        'code' => SUCCESS,
+        'code' => '000000',
         'message' => '请求成功',
         'data' => [
             'access_token' => 'sdfkljHDFHDl3j4lHSDKFHL',

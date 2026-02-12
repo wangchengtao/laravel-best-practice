@@ -22,7 +22,7 @@ class TopicController extends Controller
     {
         $topics = Topic::filter($request->all())->with('user')->paginate(10);
 
-        return $this->paginate(new TopicCollection($topics));
+        return $this->collection(new TopicCollection($topics));
     }
 
     #[Endpoint('创建')]
