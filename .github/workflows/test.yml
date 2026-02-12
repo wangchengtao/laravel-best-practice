@@ -10,12 +10,6 @@ jobs:
   laravel-tests:
 
     runs-on: ubuntu-latest
-    env:
-      DB_DATABASE: blog
-      DB_USERNAME: root
-      DB_PASSWORD: password
-      CACHE_DRIVER: redis
-      QUEUE_CONNECTION: redis
 
     services:
       mysql:
@@ -81,11 +75,14 @@ jobs:
       env:
         DB_CONNECTION: mysql
         DB_HOST: mysql
-        DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+        DB_PORT: 3306
         DB_DATABASE: blog
         DB_USERNAME: root
         DB_PASSWORD: password
 
         REDIS_HOST: redis
-        REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+        REDIS_PORT: 6379
+
+        CACHE_DRIVER: redis
+        QUEUE_CONNECTION: redis
       run: php artisan test
