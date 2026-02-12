@@ -71,7 +71,7 @@
             "git config core.hooksPath .githooks || true",
             "chmod +x .githooks/pre-commit || true"
         ],
-        "cs": "php-cs-fixer fix $1",
+        "cs": "php-cs-fixer fix $1 --path-mode=intersection",
         "scribe": [
             "@php artisan scribe:generate"
         ]
