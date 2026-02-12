@@ -1,14 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class UserControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -20,8 +25,8 @@ class UserControllerTest extends TestCase
         $this->assertDatabaseCount(User::class, 2);
 
         $this->get(route('users.index'))
-             ->assertStatus(200)
-             ->assertJsonPath('data.count', 2);
+            ->assertStatus(200)
+            ->assertJsonPath('data.count', 2);
     }
 
     public function testStore(): void
@@ -32,8 +37,8 @@ class UserControllerTest extends TestCase
         ];
 
         $this->postJson(route('users.store'), $params)
-             ->assertStatus(200)
-             ->assertJsonPath('code', '000000');
+            ->assertStatus(200)
+            ->assertJsonPath('code', '000000');
 
         $this->assertDatabaseCount(User::class, 1);
     }
@@ -48,11 +53,9 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create($params);
         Topic::factory()->count(2)->for($user)->for(Category::factory())->create();
 
-
         $this->get(route('users.show', $user->id))
-             ->assertStatus(200)
-             ->assertJsonPath('data.name', $user->name)
+            ->assertStatus(200)
+            ->assertJsonPath('data.name', $user->name)
             ->assertJsonCount(2, 'data.topics');
     }
-
 }

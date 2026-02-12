@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Supports\Traits;
 
 use ReflectionClass;
@@ -18,11 +20,10 @@ trait Constructor
                 continue;
             }
 
-            $method = 'set'.ucfirst($key);
+            $method = 'set' . ucfirst($key);
             if (method_exists($this, $method)) {
                 $this->{$method}($value);
             }
         }
-
     }
 }

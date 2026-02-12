@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use EloquentFilter\Filterable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, HasFactory, Filterable;
+    use Notifiable;
+    use HasFactory;
+    use Filterable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name', 'email', 'password', 'avatar', 'introduction', 'phone',
     ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -55,7 +59,6 @@ class User extends Authenticatable implements JWTSubject
         $this->laravelNotify($instance);
     }
 
-
     public function replies()
     {
         return $this->hasMany(Reply::class);
@@ -74,13 +77,6 @@ class User extends Authenticatable implements JWTSubject
         $this->unreadNotifications->markAsRead();
     }
 
-    protected function password(): Attribute
-    {
-        return Attribute::make(
-            set: fn ($value) => bcrypt($value),
-        );
-    }
-
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -89,5 +85,12 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => bcrypt($value),
+        );
     }
 }

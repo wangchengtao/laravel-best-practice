@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use EloquentFilter\Filterable;
@@ -8,7 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Topic extends Model
 {
-    use Filterable, HasFactory;
+    use Filterable;
+    use HasFactory;
 
     protected $fillable = [
         'title', 'body', 'category_id', 'excerpt', 'slug',
@@ -18,6 +21,7 @@ class Topic extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

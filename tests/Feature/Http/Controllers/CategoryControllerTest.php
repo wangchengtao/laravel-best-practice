@@ -1,14 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -20,8 +25,8 @@ class CategoryControllerTest extends TestCase
         $this->assertDatabaseCount(Category::class, 2);
 
         $this->get(route('categories.index'))
-             ->assertStatus(200)
-             ->assertJsonPath('data.count', 2);
+            ->assertStatus(200)
+            ->assertJsonPath('data.count', 2);
     }
 
     public function testStore()
@@ -75,9 +80,10 @@ class CategoryControllerTest extends TestCase
     public function testDestroy()
     {
         $category = Category::factory()
-            ->has(Topic::factory()
-                       ->count(2)
-                       ->for(User::factory())
+            ->has(
+                Topic::factory()
+                    ->count(2)
+                    ->for(User::factory())
             )
             ->create();
 

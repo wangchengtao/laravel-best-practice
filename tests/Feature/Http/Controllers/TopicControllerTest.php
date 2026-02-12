@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Category;
@@ -7,10 +9,13 @@ use App\Models\Reply;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class TopicControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -18,18 +23,20 @@ class TopicControllerTest extends TestCase
     public function testIndex(): void
     {
         Topic::factory()
-             ->count(2)
-             ->for(Category::factory())
-             ->for(User::factory())
-             ->create();
+            ->count(2)
+            ->for(Category::factory())
+            ->for(User::factory())
+            ->create();
 
         $this->assertDatabaseCount(Topic::class, 2);
 
         $this->get(route('topics.index'))
             ->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->has('data.list', 2, fn (AssertableJson $json) =>
-                    $json->has('id')->has('title')->has('body')->has('user')
+            ->assertJson(
+                fn (AssertableJson $json) => $json->has(
+                    'data.list',
+                    2,
+                    fn (AssertableJson $json) => $json->has('id')->has('title')->has('body')->has('user')
                 )->etc()
             );
     }
@@ -37,14 +44,14 @@ class TopicControllerTest extends TestCase
     public function testIndexByQuery(): void
     {
         Topic::factory()
-             ->count(10)
-             ->for(User::factory())
+            ->count(10)
+            ->for(User::factory())
             ->sequence(
                 ['title' => 'laravel', 'category_id' => 1],
                 ['title' => 'java', 'category_id' => 2],
                 ['title' => 'go', 'category_id' => 1],
             )
-             ->create();
+            ->create();
 
         $params = [
             'title' => 'laravel',
@@ -59,8 +66,8 @@ class TopicControllerTest extends TestCase
         ];
 
         $this->getJson(route('topics.index', $params))
-             ->assertStatus(200)
-             ->assertJsonCount(7, 'data.list');
+            ->assertStatus(200)
+            ->assertJsonCount(7, 'data.list');
 
         $params = [
             'title' => 'laravel',
@@ -68,8 +75,8 @@ class TopicControllerTest extends TestCase
         ];
 
         $this->getJson(route('topics.index', $params))
-             ->assertStatus(200)
-             ->assertJsonCount(4, 'data.list');
+            ->assertStatus(200)
+            ->assertJsonCount(4, 'data.list');
     }
 
     public function testStore(): void
@@ -83,7 +90,7 @@ class TopicControllerTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)
-             ->postJson(route('topics.store'), $params)
+            ->postJson(route('topics.store'), $params)
             ->assertStatus(200);
 
         $this->assertDatabaseCount(Topic::class, 1);
@@ -97,33 +104,33 @@ class TopicControllerTest extends TestCase
         ];
 
         $topic = Topic::factory()
-                      ->for(User::factory())
-                      ->for(Category::factory())
-                      ->for(User::factory(), 'lastReplyUser')
-                      ->has(Reply::factory()->count(2)->for(User::factory()))
-                      ->create($params);
+            ->for(User::factory())
+            ->for(Category::factory())
+            ->for(User::factory(), 'lastReplyUser')
+            ->has(Reply::factory()->count(2)->for(User::factory()))
+            ->create($params);
 
         $this->assertDatabaseCount(Topic::class, 1);
         $this->assertDatabaseCount(Category::class, 1);
 
         $this->get(route('topics.show', $topic->id))
             ->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->where('data.title', $params['title'])
-                     ->has('data.replies', 2)
-                     ->has('data.user')
-                     ->has('data.category')
-                     ->has('data.last_reply_user')
-                     ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json->where('data.title', $params['title'])
+                    ->has('data.replies', 2)
+                    ->has('data.user')
+                    ->has('data.category')
+                    ->has('data.last_reply_user')
+                    ->etc()
             );
     }
 
     public function testUpdate(): void
     {
         $topic = Topic::factory()
-                      ->for(User::factory())
-                      ->for(Category::factory())
-                      ->create();
+            ->for(User::factory())
+            ->for(Category::factory())
+            ->create();
 
         $params = [
             'title' => 'test',
@@ -142,10 +149,10 @@ class TopicControllerTest extends TestCase
     public function testDestroy(): void
     {
         $topic = Topic::factory()
-                      ->for(User::factory())
-                      ->for(Category::factory())
-                      ->has(Reply::factory()->count(2))
-                      ->create();
+            ->for(User::factory())
+            ->for(Category::factory())
+            ->has(Reply::factory()->count(2))
+            ->create();
 
         $this->assertDatabaseCount(Topic::class, 1);
         $this->assertDatabaseCount(Category::class, 1);
@@ -158,5 +165,4 @@ class TopicControllerTest extends TestCase
         $this->assertModelMissing($topic);
         $this->assertDatabaseEmpty(Reply::class);
     }
-
 }

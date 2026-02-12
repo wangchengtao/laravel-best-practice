@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Constants;
 
 use App\Supports\Attributes\Message;
@@ -14,5 +16,4 @@ enum BizCode: string
 
     #[Message('系统异常')]
     case FAIL = '100000';
-
 }

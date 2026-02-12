@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Exceptions;
 
@@ -9,9 +10,8 @@ use Throwable;
 
 class CustomException extends BaseException
 {
-    public function __construct(string $message = "", BizCode $code = BizCode::FAIL, Throwable $previous = null)
+    public function __construct(string $message = '', BizCode $code = BizCode::FAIL, ?Throwable $previous = null)
     {
         parent::__construct($message, $code->value, $previous);
     }
-
 }

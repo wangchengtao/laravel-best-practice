@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Knuckles\Scribe\Attributes\BodyParam;
 
 #[BodyParam('name', 'string', '分类名称')]
@@ -11,7 +14,7 @@ class CategoryRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, array|string|ValidationRule>
      */
     public function rules(): array
     {

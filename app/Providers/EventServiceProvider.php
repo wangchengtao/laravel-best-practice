@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Listeners\QueryListener;
@@ -27,13 +29,9 @@ class EventServiceProvider extends ServiceProvider
 
     /**
      * Register any events for your application.
-     *
-     * @return void
      */
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Data\AuthTokenData;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +35,7 @@ class AuthController extends Controller
             'access_token' => 'sdfkljHDFHDl3j4lHSDKFHL',
             'token_type' => 'bearer',
             'expires_in' => 7200,
-        ]
+        ],
     ])]
     #[ResponseField('access_token', 'string', '登录成功后返回的token')]
     #[ResponseField('token_type', 'string', 'token类型')]
@@ -40,10 +43,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if (! $token = Auth::guard('api')->attempt([
-                'name' => $request->name,
-                'password' => $request->password,
-            ]))
-        {
+            'name' => $request->name,
+            'password' => $request->password,
+        ])) {
             return $this->error('账号密码错误');
         }
 
@@ -72,21 +74,6 @@ class AuthController extends Controller
         return $this->respondWithToken(auth()->refresh());
     }
 
-    /**
-     * Get the token array structure.
-     *
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return $this->success(new AuthTokenData(
-            access_token: $token,
-            token_type: 'bearer',
-            expires_in: auth()->factory()->getTTL() * 60,
-        ));
-    }
-
     #[Endpoint('修改密码')]
     #[BodyParam('old_password', 'string', '原密码')]
     #[BodyParam('password', 'string', '新密码')]
@@ -107,5 +94,20 @@ class AuthController extends Controller
         $user->save();
 
         return $this->success();
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param mixed $token
+     * @return JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return $this->success(new AuthTokenData(
+            access_token: $token,
+            token_type: 'bearer',
+            expires_in: auth()->factory()->getTTL() * 60,
+        ));
     }
 }

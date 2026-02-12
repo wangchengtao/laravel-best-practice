@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Supports\Traits;
 
 use App\Supports\Attributes\JsonIgnore;
@@ -49,7 +51,6 @@ trait Serializable
             } else {
                 throw new InvalidArgumentException('序列化对象属性 (' . $property->getName() . ') 类型必须是内置类型或实现 Arrayable 接口');
             }
-
         }
 
         return $result;
@@ -57,6 +58,6 @@ trait Serializable
 
     protected function map(array $properties): array
     {
-        return array_map(fn($item) => $item instanceof Arrayable ? $item->toArray() : $item, $properties);
+        return array_map(fn ($item) => $item instanceof Arrayable ? $item->toArray() : $item, $properties);
     }
 }

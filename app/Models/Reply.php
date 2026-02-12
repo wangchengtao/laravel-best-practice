@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 class Reply extends Model
 {
-
     protected $fillable = ['content'];
 
     public function topic()
