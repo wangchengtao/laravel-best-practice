@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      DB_DATABASE: laravel
+      DB_DATABASE: blog
       DB_USERNAME: root
       DB_PASSWORD: password
       CACHE_DRIVER: redis
@@ -22,7 +22,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: laravel
+          MYSQL_DATABASE: blog
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -39,10 +39,11 @@ jobs:
         php-versions: ['8.1', '8.2', '8.3', '8.4']
 
     steps:
-    - uses: shivammathur/setup-php@v2
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: mysql, mbstring
+        extensions: mysql, mbstring, redis
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -76,11 +77,17 @@ jobs:
     - name: Clear configs
       run: php artisan config:clear
 
-    - name: Run migration
-      run: php artisan migrate
+    - name: Wait for Mysql to be ready
+      run: |
+        until mysqladmin ping -h mysql --silent; do
+          echo "Waiting for mysql to be ready..."
+          sleep 5
+        done
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DB_CONNECTION: mysql
         DB_HOST: mysql
+
+        REDIS_HOST: redis
       run: php artisan test
