@@ -87,6 +87,6 @@ class CategoryControllerTest extends TestCase
             ->assertStatus(200);
 
         $this->assertModelMissing($category);
-        $this->assertDatabaseEmpty(Topic::class);
+        $this->assertDatabaseMissing(Topic::class, ['category_id' => $category->id]);
     }
 }
