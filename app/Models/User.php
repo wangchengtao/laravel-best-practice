@@ -6,6 +6,7 @@ namespace App\Models;
 
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use Filterable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
