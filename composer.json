@@ -16,8 +16,7 @@
         "spatie/laravel-data": "^4.2",
         "tucker-eric/eloquentfilter": "^3.2.0",
         "tymon/jwt-auth": "^2.0",
-        "wangchengtao/laravel-exception-notify": "^1.0",
-        "yaza/laravel-repository-service": "^4.0"
+        "wangchengtao/laravel-exception-notify": "^1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
